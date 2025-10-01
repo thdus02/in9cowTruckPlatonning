@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2025-10-01 11:50:09 by Eclipse SUMO netedit Version 1.24.0
+-->
+
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+    <!-- 차량 타입 정의 -->
+    <vType id="leadtruck" carFollowModel="Krauss"
+           accel="1.5" decel="3.0" length="12" maxSpeed="10" color="yellow"/>
+
+    <vType id="truckCACC" carFollowModel="CACC" tau="0.6" minGap="3.0"
+           accel="1.5" decel="3.0" length="12" maxSpeed="33" color="grey"/>
+
+    <!-- Routes -->
+    <route id="r_0" edges="E0"/>
+    <!-- Vehicles, persons and containers (sorted by depart) -->
+    <vehicle id="Leader" type="leadtruck" depart="0.00" color="yellow" route="r_0"/>
+    <vehicle id="Follower" type="truckCACC" depart="1.00" color="grey" route="r_0"/>
+</routes>
