@@ -18,14 +18,29 @@ import traci  # SUMO <-> Python bridge (TraCI)
 Sumo_config = [
     'sumo-gui',
     '-c', 'osm.sumocfg',
-    '--route-files', 'First.rou.xml',
     '--step-length', '0.05',          # 더 부드럽게(원하면 0.1로)
     '--delay', '100',                # GUI 느리게(원하면 조절/삭제)
-    '--lateral-resolution', '0.1'
+    '--lateral-resolution', '0.1',
+     '--collision.action', 'warn',           # ★ 충돌 시 제거/텔레포트 대신 경고
+    '--collision.mingap-factor', '1.0'      # ★ 안전거리 계산에 minGap 반영(보수적)
 ]
 
 # Step 5: Open connection between SUMO and TraCI
 traci.start(Sumo_config)
+
+# === Safety defaults (충돌 회피 및 급제동 성능 보정) ===
+try:
+    # (선택) 안전 모드 보장 – 기본값이지만 혹시라도 변경된 상태를 초기화
+    traci.vehicle.setSpeedMode("Leader", 31)
+    traci.vehicle.setSpeedMode("Follower", 31)
+
+    # vType의 emergencyDecel 을 충분히 크게 (리더 급정지 대응력 향상)
+    # rou 파일에 id가 'leadtruck', 'truckCACC' 라고 했으니 그 타입에 적용
+    traci.vehicletype.setEmergencyDecel("leadtruck", 6.0)   # m/s^2
+    traci.vehicletype.setEmergencyDecel("truckCACC", 6.0)
+
+except traci.exceptions.TraCIException:
+    pass
 
 
 # 브레이크제어 (클릭형: 클릭마다 감속량 누적, 이후 자동 복귀)
@@ -74,11 +89,113 @@ class LeaderController:
 
             
 # Step 6: Define variables (state & constants)
+# === Platooningcontrol constants ===
+MIN_GAP_M    = 20.0      # 최소 간격 (Follower 앞범퍼 ~ Leader 뒷범퍼)
+MAX_GAP_M    = 20.0      # 최대 간격
+T_HEADWAY_S  = 0.8       # 목표 시간 헤드웨이 (s)
+
+CATCH_GAIN   = 0.20      # 멀어질 때 추종 가속 이득
+BRAKE_GAIN   = 0.50      # 가까워질 때 감속 이득
+V_MAX_FOLLOW = 33.0      # Follower 속도 상한 (m/s) - 필요시 조정
+
+# === 속도계기판 ===
 KMH_LIMIT = 160.0   # 계기판 최대 표기 (km/h)
 NEEDLE_RADIUS = 90  # 바늘 길이 (px)
 CENTER_X, CENTER_Y = 150, 150
 
 # Step 7: Define functions (UI helpers & update loop)
+# === 최대,최소 gap설정 및 추월 금지
+def ensure_no_overtake(veh_id):
+    """차선 변경을 완전히 막아 추월 금지."""
+    try:
+        traci.vehicle.setLaneChangeMode(veh_id, 0)  # 모든 lane-change 의도 off
+    except traci.exceptions.TraCIException:
+        pass
+
+def control_follower_speed():
+    """Leader 기준으로 Follower가 MIN_GAP~MAX_GAP 범위에 머물도록 제어."""
+    vehicles = set(traci.vehicle.getIDList())
+    if not {"Leader", "Follower"}.issubset(vehicles):
+        return
+
+    # 추월 금지 (보수적으로 매 스텝 보장)
+    ensure_no_overtake("Leader")
+    ensure_no_overtake("Follower")
+
+    vL = traci.vehicle.getSpeed("Leader")
+    vF = traci.vehicle.getSpeed("Follower")
+
+    lead_info = traci.vehicle.getLeader("Follower", 1000.0)  # (leaderID, gap_m) or None
+    if not lead_info or lead_info[0] != "Leader":
+        # 리더를 못 보면 -> vL보다 조금 빠르게 달려서 추격
+        target_v = min(vL + 2.0, V_MAX_FOLLOW) # +2 m/s 정도 여유
+        traci.vehicle.setSpeed("Follower", max(0.0, target_v))
+        return
+
+    gap_m = max(0.0, lead_info[1])  # 앞범퍼~뒷범퍼 간격
+    closing = vF - vL  # (+)면 좁혀지는 중
+     # 정지거리 추정: s = v^2 / (2*a_em)
+    try:
+        a_em_L = traci.vehicletype.getEmergencyDecel(traci.vehicle.getTypeID("Leader"))
+    except:
+        a_em_L = 6.0
+    try:
+        a_em_F = traci.vehicletype.getEmergencyDecel(traci.vehicle.getTypeID("Follower"))
+    except:
+        a_em_F = 6.0
+
+    sL = (vL * vL) / (2.0 * max(1e-6, a_em_L))
+    sF = (vF * vF) / (2.0 * max(1e-6, a_em_F))
+    BUFFER = 5.0  # m, 추가 안전 여유
+
+    # 2) 정지거리 기준 ‘이미 위험’ 판단
+    imminent = (sF > gap_m + sL - BUFFER)
+
+    # 3) TTC(Time-To-Collision) 기반 판단(양수 closing에서만 유효)
+    TTC_MIN = 1.3  # s
+    ttc_danger = False
+    if closing > 0.0:
+        ttc = gap_m / closing
+        ttc_danger = (ttc < TTC_MIN)
+    else:
+        ttc = float('inf')
+
+    if imminent or ttc_danger:
+        # ★ 강한 감속 명령: 리더 속도보다 확실히 낮추고, slowDown으로 급제동 유도
+        safe_v = max(0.0, min(vF - 3.0, vL - 2.0))  # ↓ 더 강하게 감속
+        traci.vehicle.slowDown("Follower", safe_v, int(1000 * 0.5))  # 0.3s 동안 급감속, 0.3을 0.4~0.6으로 늘리면 감속 시간을 늘려 보다 부드럽게 감속.
+        traci.vehicle.setSpeed("Follower", safe_v)
+        return
+    # ====== 안전 급제동 블록 끝 ======
+
+    # 시간 헤드웨이 기반 목표 간격 + 상/하한 클램프
+    desired_gap = MIN_GAP_M + T_HEADWAY_S * vF
+    desired_gap = max(MIN_GAP_M, min(desired_gap, MAX_GAP_M))
+
+    error = gap_m - desired_gap  # (+) 멀다 → 가속 / (-) 가깝다 → 감속
+
+    if error < 0:
+        # 너무 가까움 → Leader보다 느리게 (감속)
+        target_v = min(vF, vL) + error * BRAKE_GAIN  # error<0 → 감속
+        target_v = min(target_v, vL - 0.5)  # Leader보다 약간 느리게(여유 0.5 m/s)
+    else:
+        # 너무 멀다 → Leader보다 약간 빠르게 (상한 제한)
+        target_v = vL + min(3.0, error * CATCH_GAIN)  # 최대 +3 m/s까지만 추종 가속
+
+    target_v = max(0.0, min(target_v, V_MAX_FOLLOW))
+    traci.vehicle.setSpeed("Follower", target_v)
+
+def _boost_follower_once():
+    """Follower가 출발한 직후 최고속도 제한을 풀어주는 함수"""
+    for vid in traci.simulation.getDepartedIDList():
+        if vid == "Follower":
+            try:
+                # 40 m/s ≈ 144 km/h (테스트용 넉넉히)
+                traci.vehicle.setMaxSpeed("Follower", 40.0)
+            except traci.exceptions.TraCIException:
+                pass
+
+# === 속도계기판 ===
 def draw_scale(canvas, max_speed_kmh=160, step=20):
     """속도계 눈금 숫자 표시"""
     radius = 100
@@ -122,6 +239,8 @@ def update_data():
         root.quit() #Tkinter 루프 종료
         return # update_data() 종료 (더 이상 반복x)
     
+    _boost_follower_once()  # ★ 출발 순간 한 번만 상한 해제
+
     vehicles = set(traci.vehicle.getIDList())
 
     #여기서 함수 호출 개별 업데이트 하는
@@ -133,7 +252,7 @@ def update_data():
     gap_text = "—"
     thw_text = "—"
     if "Follower" in vehicles:
-        lead_info = traci.vehicle.getLeader("Follower")  # (leaderID, gap_m) or None
+        lead_info = traci.vehicle.getLeader("Follower", 1000.0)  # (leaderID, gap_m) or None
         if lead_info is not None and lead_info[0] == "Leader":
             gap_m = lead_info[1]  # Follower 앞범퍼 ~ Leader 뒤범퍼
             gap_text = f"{gap_m:,.1f} m"
@@ -146,6 +265,8 @@ def update_data():
     thw_label.config(text=f"Headway: {thw_text}")
 
     ctrl.update()
+    control_follower_speed()   # ★ 팔로워 추종/감속/간격/추월금지 제어
+    
     # 100ms 후 반복
     root.after(100, update_data)
 
