@@ -7,14 +7,23 @@
     <!-- VTypes -->
     <vType id="t_0"/>
     <vType id="t_1"/>
+    <vType id="t_2"/>
+
     <!-- Routes -->
-    <route id="r0" edges="E0"/>
-    <!-- Vehicles, persons and containers (sorted by depart) -->
-    <trip id="t_2" depart="0.00" from="E0" to="E0"/>
+    <route id="r0" edges="E0 E1"/>
+    <route id="r1" edges="E2 E1"/>
+
+    <!-- Vehicles, persons and containers (sorted by depart) -->  
     <vehicle id="veh_0" type="t_0" depart="0.00" departLane="best" departPos="free" departSpeed="0.00" route="r0">
         <stop parkingArea="pa_0" triggered="person"/>
     </vehicle>
+
     <vehicle id="veh_1" type="t_1" depart="0.00" departLane="best" departPos="free" departSpeed="0.00" route="r0">
         <stop parkingArea="pa_0" triggered="person"/>
     </vehicle>
+
+     <vehicle id="veh_2" type="t_2" depart="0.00" departLane="best" departPos="free" departSpeed="0.00" route="r1">
+        <stop parkingArea="pa_1" duration="10"/>
+    </vehicle>
+    
 </routes>
