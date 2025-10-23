@@ -10,5 +10,9 @@
         <route-files value="parking.rou.xml"/>
         <additional-files value="parking.add.xml"/>
     </input>
+    <time>
+        <begin value="0"/>
+        <end value="300"/>  <!-- 넉넉히 -->
+    </time>
 
 </sumoConfiguration>
