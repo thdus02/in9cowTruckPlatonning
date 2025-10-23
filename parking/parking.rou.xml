@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
 
-<!-- generated on 2025-10-22 11:26:08 by Eclipse SUMO netedit Version 1.24.0
--->
+  <vType id="t_0"/><vType id="t_1"/>
+  <route id="r0" edges="E0"/>
 
-<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
-    <!-- VTypes -->
-    <vType id="t_0"/>
-    <vType id="t_1"/>
-    <!-- Vehicles, persons and containers (sorted by depart) -->
-    <trip id="t_0" depart="0.00" from="E0" to="E0">
-        
-        <stop parkingArea="pa_0" /> 
-    </trip>
-
-    <trip id="t_1" depart="0.00" from="E0" to="E0" >
-        <stop parkingArea="pa_0" />
-    </trip>
+  <!-- t=0에 생성 → pa_0에서 '대기' (해제 전까지) -->
+  <vehicle id="veh_0" type="t_0" route="r0" depart="0" departLane="best" departPos="free" departSpeed="0">
+    <stop parkingArea="pa_0" triggered="true"/>
+  </vehicle>
+  <vehicle id="veh_1" type="t_1" route="r0" depart="0" departLane="best" departPos="free" departSpeed="0">
+    <stop parkingArea="pa_0" triggered="true"/>
+  </vehicle>
 </routes>
