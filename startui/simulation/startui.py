@@ -66,21 +66,25 @@ class StartUI(tk.Tk):
     def apply(self):
         leader = self.leader_var.get()
         followers = [v for v, var in self.follower_vars.items() if var.get() and v != leader]
-        
-        #고른대로 업데이트 되는거잖아
+
+        # FOLLOW_PAIRS 구성
         cfg.FOLLOW_PAIRS = []
         prev = leader
         for f in followers:
             cfg.FOLLOW_PAIRS.append((f, prev))
             prev = f
-        
         cfg.FOLLOWERS = [f for f, _ in cfg.FOLLOW_PAIRS]
 
-        print("Leader:", leader)
-        print("Followers:", followers)
-        print("FOLLOW_PAIRS:", cfg.FOLLOW_PAIRS)
+        # ✅ 선택 결과를 명시적으로 저장 (여기가 핵심)
+        cfg.SELECTABLE_VEHICLES = list(VEH_LIST.values())          # UI에서 보이던 전체 후보
+        cfg.PLATOON_CHAIN = ([leader] + followers) if leader else []
+        cfg.NON_PLATOON   = [v for v in cfg.SELECTABLE_VEHICLES if v not in cfg.PLATOON_CHAIN]
+
+        print("PLATOON_CHAIN:", cfg.PLATOON_CHAIN)
+        print("NON_PLATOON:", cfg.NON_PLATOON)
 
         self.destroy()
+
 
 
 def open_selector_and_wait():
