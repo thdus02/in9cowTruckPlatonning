@@ -47,10 +47,19 @@
 2. 구성 내용
 
    2-1. CACC 기반 추종 제어 알고리즘
+            팔로워 차량은 CACC(Cooperative Adaptive Cruise Control) 원리에 따라 리더와의 간격을 유지한다. 
+            본 연구에서는 SUMO 내부 자동제어 대신 TraCI 외부 제어 방식을 사용하여 실시간으로 속도 및 차선 명령을 전달한다.
+            
+             (1) 기준 간격 Time Headway 모델
+<img width="281" height="112" alt="image" src="https://github.com/user-attachments/assets/11c45d4e-b43b-45d8-a10e-f09237068458" />
+<img width="282" height="40" alt="image" src="https://github.com/user-attachments/assets/65f4e5c7-4bfb-44f2-9ffa-1a97a6a863af" />
 
-     (1) 기준 간격 Time Headway 모델
+             (2) PD 기반 제어식
+             현재 간격(d), 목표 간격, 속도 차이(v_L−v_F), 앞차 가속도를 이용해 팔로워의 목표 가속도를 산출한다.
+<img width="315" height="39" alt="image" src="https://github.com/user-attachments/assets/db5906fd-994a-48ef-baf2-4a32d85a9865" />
+<img width="214" height="72" alt="image" src="https://github.com/user-attachments/assets/d6b7229b-0ad1-48f2-8743-45f9cc8cb7ed" />
 
-     (2) PD 기반 제어식
+            산출된 가속도는 다음 스텝의 속도 명령으로 변환되어 적용된다.
 
    2-2. 플래투닝 상황별 이벤트 
 
