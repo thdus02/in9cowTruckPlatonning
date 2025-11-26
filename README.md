@@ -19,7 +19,7 @@
     2. 구성 내용
 
          2-1. CACC 기반 추종 제어 알고리즘
-             (1) 기준 간격 (Time Headway 모델)
+             (1) 기준 간격 Time Headway 모델
 
              (2) PD 기반 제어식
 
