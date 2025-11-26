@@ -39,23 +39,23 @@
 
          2-2. 플래투닝 상황별 이벤트 
 
-    3. 결과 
-    
-    
-    https://github.com/user-attachments/assets/9ff2c064-ebfe-4253-a139-72d3d84c2e87
 
 
-    [플래투닝 이탈 및 합류 결과 영상]
-    
-    플래투닝 이탈 → 단독 주행 → 간격 확보 → 자연스러운 재합류를 구현하였다.
-    
-    
-    https://github.com/user-attachments/assets/1100c6df-3e73-4d6b-91f4-87eb9c563ed5
+3. 결과
 
+ 
+https://github.com/user-attachments/assets/9ff2c064-ebfe-4253-a139-72d3d84c2e87
+
+[플래투닝 이탈 및 합류 결과 영상]
     
-    [일반차 중간 합류 결과 영상]
+플래투닝 이탈 → 단독 주행 → 간격 확보 → 자연스러운 재합류를 구현하였다.
     
-    일반 차량 접근 → 대열 간격 확장 → 안전 여유 공간 확보 → 자연스러운 끼어들기를 구현하였다.
+    
+https://github.com/user-attachments/assets/1100c6df-3e73-4d6b-91f4-87eb9c563ed5
+
+[일반차 중간 합류 결과 영상]
+    
+일반 차량 접근 → 대열 간격 확장 → 안전 여유 공간 확보 → 자연스러운 끼어들기를 구현하였다.
       
 
 
