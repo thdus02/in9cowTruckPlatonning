@@ -40,7 +40,10 @@
 
 
 
-1. 시스템 UI 흐름
+1. 시스템 UI 
+
+<img width="481" height="293" alt="image" src="https://github.com/user-attachments/assets/2bb8d9db-792b-43be-be16-c958126695ad" />
+
 
 
 2. 구성 내용
