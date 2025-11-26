@@ -19,6 +19,7 @@
 
 **3. 기획 의도**
 
+트럭 플래투닝은 여러 대의 화물차가 짧은 간격을 유지하며 군집 주행함으로써 연료 절감, 탄소 배출 감소, 물류 효율 향상을 기대할 수 있는 차세대 물류 기술이다. 그러나 실제 도로에서 다양한 상황을 반복 실험하기에는 비용과 위험이 크기 때문에, 본 프로젝트에서는 SUMO 시뮬레이터 기반의 플래투닝 실험 환경을 구축하였다. 이를 통해 CACC 기반 간격·속도 제어를 비롯하여 합류, 이탈, 끼어들기와 같은 동적 주행 시나리오까지 안정적으로 처리하는 제어 로직을 구현하였으며, 플래투닝의 동작 특성과 안전성을 자유롭게 실험·분석할 수 있는 연구용 테스트베드를 제공하는 것을 목표로 한다.
 
 
 **4. 작품 설명**
@@ -42,30 +43,46 @@
 - 전체 시스템 통합 제어
 
 
+
 1. 시스템 UI 흐름
+
 
 2. 구성 내용
 
+
    2-1. CACC 기반 추종 제어 알고리즘
-            팔로워 차량은 CACC(Cooperative Adaptive Cruise Control) 원리에 따라 리더와의 간격을 유지한다. 
-            본 연구에서는 SUMO 내부 자동제어 대신 TraCI 외부 제어 방식을 사용하여 실시간으로 속도 및 차선 명령을 전달한다.
-            
-             (1) 기준 간격 Time Headway 모델
-<img width="281" height="112" alt="image" src="https://github.com/user-attachments/assets/11c45d4e-b43b-45d8-a10e-f09237068458" />
-<img width="282" height="40" alt="image" src="https://github.com/user-attachments/assets/65f4e5c7-4bfb-44f2-9ffa-1a97a6a863af" />
+  
+   팔로워 차량은 CACC(Cooperative Adaptive Cruise Control) 원리에 따라 리더와의 간격을 유지한다. 
+  
+   본 연구에서는 SUMO 내부 자동제어 대신 TraCI 외부 제어 방식을 사용하여 실시간으로 속도 및 차선 명령을 전달한다.
 
-             (2) PD 기반 제어식
-             현재 간격(d), 목표 간격, 속도 차이(v_L−v_F), 앞차 가속도를 이용해 팔로워의 목표 가속도를 산출한다.
-<img width="315" height="39" alt="image" src="https://github.com/user-attachments/assets/db5906fd-994a-48ef-baf2-4a32d85a9865" />
-<img width="214" height="72" alt="image" src="https://github.com/user-attachments/assets/d6b7229b-0ad1-48f2-8743-45f9cc8cb7ed" />
+   ---
+   (1) 기준 간격 Time Headway 모델
+    
+   <img width="281" height="112" alt="image" src="https://github.com/user-attachments/assets/bec8ffb2-2978-40f3-a7f9-9c3d3e4385ce" />
+    
+   <img width="366" height="52" alt="image" src="https://github.com/user-attachments/assets/9f5333bd-90c9-4a4f-bf68-4761c6a2b6f2" />
 
-            산출된 가속도는 다음 스텝의 속도 명령으로 변환되어 적용된다.
+   ---
+    
+   (2) PD 기반 제어식
+   
+   현재 간격(d), 목표 간격, 속도 차이(v_L−v_F), 앞차 가속도를 이용해 팔로워의 목표 가속도를 산출한다.
+    
+   <img width="315" height="44" alt="image" src="https://github.com/user-attachments/assets/205e87c3-1998-4a16-9abe-99d4a2d08974" />
+
+   <img width="244" height="85" alt="image" src="https://github.com/user-attachments/assets/5d712bbd-5481-41a3-9504-7112bbfffcfd" />
+
+   산출된 가속도는 다음 스텝의 속도 명령으로 변환되어 적용된다.
+
+   ---
+
 
    2-2. 플래투닝 상황별 이벤트 
 
 
 
-4. 결과
+**3. 결과**
 
  
 https://github.com/user-attachments/assets/9ff2c064-ebfe-4253-a139-72d3d84c2e87
@@ -90,7 +107,7 @@ https://github.com/user-attachments/assets/9a5d35ed-dc30-4ef0-aaa8-d9476d1ad1f1
 
 
 
-**5. 개발환경**
+**4. 개발환경**
    -   Python 3.9.13
    -   SUMO 1.24.0
    -   TraCI API 사용 (SUMO ↔ Python 연동)
