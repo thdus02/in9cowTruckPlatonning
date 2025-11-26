@@ -2,7 +2,7 @@
 
 1. 프로젝트명
 
-  트럭 플래투닝 (Truck Platooning) 시스템 개발
+    트럭 플래투닝 (Truck Platooning) 시스템 개발
 
 2. 팀 구성
 
