@@ -75,7 +75,7 @@ https://github.com/user-attachments/assets/1100c6df-3e73-4d6b-91f4-87eb9c563ed5
 
 https://github.com/user-attachments/assets/9a5d35ed-dc30-4ef0-aaa8-d9476d1ad1f1
 
-[PA_1 차량 출발 후 플래투닝 차량 꼬리 합류 결과 영상]
+[PA_1 주차 차량 출발 후 플래투닝 차량 꼬리 합류 결과 영상]
       
 다른 출발지에서 출발 → 대열 300m 이내 접근 → 가까운 플래투닝 차량 인식 → 자연스러운 끼어들기 합류를 구현하였다.
 
