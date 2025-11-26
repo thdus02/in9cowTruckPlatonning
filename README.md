@@ -42,9 +42,6 @@
     3. 결과 
       
 
-https://github.com/user-attachments/assets/41db308d-1ada-457f-befc-9e0830d7d2ef
-
-
 
             
 
