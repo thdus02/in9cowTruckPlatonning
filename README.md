@@ -40,6 +40,7 @@
          2-2. 플래투닝 상황별 이벤트 
 
     3. 결과 
+
     
     
     https://github.com/user-attachments/assets/0bd1e669-0b5e-4281-9fa5-f33b570c5891
