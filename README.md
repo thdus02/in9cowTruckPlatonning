@@ -78,11 +78,23 @@
    ---
 
 
-   2-2. 플래투닝 상황별 이벤트 
+   2-2. 플래투닝 상황별 이벤트
 
+   <img width="649" height="74" alt="image" src="https://github.com/user-attachments/assets/157ac4d4-7afc-4aea-b558-949ea15af145" />
 
+   <img width="466" height="117" alt="image" src="https://github.com/user-attachments/assets/85c94b41-dc12-4129-a6ac-3c3bac182f62" />
 
-3. 결과
+   시뮬레이션을 시작하면 리더/팔로워 구성 및 초기 제어 설정 작업이 시작된다.
+   
+   <img width="682" height="210" alt="image" src="https://github.com/user-attachments/assets/e430590e-7ac3-4798-b7ca-8403cd9540c7" />
+
+   주행이 시작되면 메인 루프에서 매 스텝마다 다음 작업들이 반복된다.
+
+   1. 중간 합류 – 기존 대열 사이로 들어오는 플래투닝 차량
+   2. 일반 차량 끼어들기(Cut-in)
+   3. 플래투닝 이탈
+
+4. 결과
 
  
 https://github.com/user-attachments/assets/9ff2c064-ebfe-4253-a139-72d3d84c2e87
