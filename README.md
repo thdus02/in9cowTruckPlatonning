@@ -9,8 +9,12 @@
 
 
 
-**2. 프로젝트 인원**
- 컴퓨터공학과 - 김가람, 김진경, 안소연, 조하연 4인 
+**2. 팀명: 인구소**
+- 팀장 - 컴퓨터공학과 202101750 김진경
+- 팀원 - 컴퓨터공학과 202101733 김가람
+- 팀원 - 컴퓨터공학과 202101775 안소연
+- 팀원 - 컴퓨터공학과 202101809 조하연
+
 
 
 **3. 기획 의도**
@@ -20,7 +24,7 @@
 
 **4. 작품 설명**
 
-구현 기능
+가. 구현 기능
 
 - 차량 주차 및 초기화
 - 리더/팔로워 설정
@@ -36,16 +40,16 @@
 
 
 
-4-1. 시스템 UI 
+1. 시스템 UI 
 
 <img width="481" height="293" alt="image" src="https://github.com/user-attachments/assets/2bb8d9db-792b-43be-be16-c958126695ad" />
 
 
 
-4-2. 구성 내용
+2. 구성 내용
 
 
-   1. CACC 기반 추종 제어 알고리즘
+   2-1. CACC 기반 추종 제어 알고리즘
   
    팔로워 차량은 CACC(Cooperative Adaptive Cruise Control) 원리에 따라 리더와의 간격을 유지한다. 
   
@@ -73,7 +77,7 @@
    ---
 
 
-   2. 플래투닝 상황별 이벤트
+   2-2. 플래투닝 상황별 이벤트
 
    <img width="649" height="74" alt="image" src="https://github.com/user-attachments/assets/157ac4d4-7afc-4aea-b558-949ea15af145" />
 
@@ -89,41 +93,32 @@
    2. 일반 차량 끼어들기(Cut-in)
    3. 플래투닝 이탈
 
+4. 결과
 
-4-3. 결과
  
- 
-   https://github.com/user-attachments/assets/9ff2c064-ebfe-4253-a139-72d3d84c2e87
+https://github.com/user-attachments/assets/9ff2c064-ebfe-4253-a139-72d3d84c2e87
 
-   [플래투닝 이탈 및 중간 합류 결과 영상]
+[플래투닝 이탈 및 중간 합류 결과 영상]
     
-   플래투닝 이탈 → 단독 주행 → 간격 확보 → 자연스러운 재합류를 구현하였다.
+플래투닝 이탈 → 단독 주행 → 간격 확보 → 자연스러운 재합류를 구현하였다.
     
     
-   https://github.com/user-attachments/assets/1100c6df-3e73-4d6b-91f4-87eb9c563ed5
+https://github.com/user-attachments/assets/1100c6df-3e73-4d6b-91f4-87eb9c563ed5
 
-   [일반차 중간 합류 결과 영상]
+[일반차 중간 합류 결과 영상]
     
-   일반 차량 접근 → 대열 간격 확장 → 안전 여유 공간 확보 → 자연스러운 끼어들기 합류를 구현하였다.
+일반 차량 접근 → 대열 간격 확장 → 안전 여유 공간 확보 → 자연스러운 끼어들기 합류를 구현하였다.
 
 
-   https://github.com/user-attachments/assets/9a5d35ed-dc30-4ef0-aaa8-d9476d1ad1f1
+https://github.com/user-attachments/assets/9a5d35ed-dc30-4ef0-aaa8-d9476d1ad1f1
 
-   [PA_1 주차 차량 출발 후 플래투닝 차량 꼬리 합류 결과 영상]
+[PA_1 주차 차량 출발 후 플래투닝 차량 꼬리 합류 결과 영상]
       
-   다른 출발지에서 출발 → 대열 300m 이내 접근 → 가까운 플래투닝 차량 인식 → 자연스러운 끼어들기 합류를 구현하였다.
+다른 출발지에서 출발 → 대열 300m 이내 접근 → 가까운 플래투닝 차량 인식 → 자연스러운 끼어들기 합류를 구현하였다.
 
 
 
-**5. 본인 역할**
-- Python 기반 SUMO 시뮬레이션 환경 구축
-
-- 합류·이탈·재합류 로직과 UI 연동 구현, 전체 제어 흐름 및 파라미터 튜닝 담당
-
-- 주요 성과: 실시간 차량 상태 표시와 안정적 플래투닝 수행 가능
-
-
-**6. 개발환경**
+**4. 개발환경**
    -   Python 3.9.13
    -   SUMO 1.24.0
    -   TraCI API 사용 (SUMO ↔ Python 연동)
